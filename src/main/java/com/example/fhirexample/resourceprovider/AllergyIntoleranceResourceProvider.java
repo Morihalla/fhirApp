@@ -1,29 +1,38 @@
-package com.example.fhirExample.ResourceProvider;
+package com.example.fhirexample.resourceprovider;
 
-import ca.uhn.fhir.rest.annotation.IdParam;
-import ca.uhn.fhir.rest.annotation.Read;
-import ca.uhn.fhir.rest.annotation.RequiredParam;
-import ca.uhn.fhir.rest.annotation.Search;
+import ca.uhn.fhir.rest.annotation.*;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceVersionConflictException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r5.model.AllergyIntolerance;
-import org.hl7.fhir.r5.model.IdType;
+import org.hl7.fhir.r5.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AllergyIntoleranceResourceProvider implements IResourceProvider {
 
-    //Constructor
-    public AllergyIntoleranceResourceProvider(){}
+    long nextID = 1;
+
+    //Basic constructor
+    public AllergyIntoleranceResourceProvider() {
+    }
+
+    //Constructor to create and add AI to list
+    public AllergyIntoleranceResourceProvider(Reference reference) {
+        long resourceID = nextID++;
+
+        AllergyIntolerance allergyIntolerance = new AllergyIntolerance();
+        allergyIntolerance.setId(Long.toString(resourceID));
+        allergyIntolerance.setPatient(reference);
+        allergyintolerancemap.put(Long.toString(resourceID), allergyIntolerance);
+    }
 
     //A map to hold all Allergies/Intolerances
-    private Map<String, AllergyIntolerance> allergyintolerancemap = new HashMap<String,AllergyIntolerance>();
+    private Map<String, AllergyIntolerance> allergyintolerancemap = new HashMap<String, AllergyIntolerance>();
+
 
     @Override
     public Class<? extends IBaseResource> getResourceType() {
@@ -33,9 +42,9 @@ public class AllergyIntoleranceResourceProvider implements IResourceProvider {
     //Search Allergies/Intolerances by Patient
     @Search
     public List<AllergyIntolerance> search(@RequiredParam(name = AllergyIntolerance.SP_PATIENT) StringParam stringParam) {
-        List<AllergyIntolerance> allergieIntolerances = new ArrayList<AllergyIntolerance>();
-        allergieIntolerances = this.searchByPatient(stringParam.getValue());
-        return allergieIntolerances;
+        List<AllergyIntolerance> allergiesIntolerances;
+        allergiesIntolerances = this.searchByPatient(stringParam.getValue());
+        return allergiesIntolerances;
     }
 
     //Simple READ-method
@@ -49,8 +58,34 @@ public class AllergyIntoleranceResourceProvider implements IResourceProvider {
         return allergyIntolerance;
     }
 
+    //Basic CREATE-method
+    @Create
+    public MethodOutcome createAllergyIntolerance(
+            @ResourceParam AllergyIntolerance ai,
+            @ConditionalUrlParam Patient patient) {
+        if (patient != null) {
+            ai.setPatient(ai.getPatient());
+            return new MethodOutcome();
+        } else {
+            return new MethodOutcome();
+        }
+    }
+
+    @Update
+    public MethodOutcome updateAllergyIntolerance (@IdParam IdType ID, AllergyIntolerance AI) {
+        String resourceID = ID.getIdPart();
+        String versionID = ID.getVersionIdPart();
+        String currentVersion = "1";
+
+        if (!versionID.equals(currentVersion)) {
+            throw new ResourceVersionConflictException("Expected version " + currentVersion);
+        }
+
+        return new MethodOutcome();
+    }
+
     //Specific search-method for AllergyIntolerance
-    private List<AllergyIntolerance> searchByPatient (String patient) {
+    private List<AllergyIntolerance> searchByPatient(String patient) {
         List<AllergyIntolerance> allergyIntoleranceList;
         loadMockAIs();
         allergyIntoleranceList = allergyintolerancemap.values()
@@ -67,7 +102,7 @@ public class AllergyIntoleranceResourceProvider implements IResourceProvider {
         allergyIntolerance.setId("1");
         allergyIntolerance.addChild("Perfume");
         allergyIntolerance.addCategory(AllergyIntolerance.AllergyIntoleranceCategory.ENVIRONMENT);
-        this.allergyintolerancemap.put("1",allergyIntolerance);
+        this.allergyintolerancemap.put("1", allergyIntolerance);
         for (int i = 2; i < 5; i++) {
             allergyIntolerance = new AllergyIntolerance();
             allergyIntolerance.setId(Integer.toString(i));
