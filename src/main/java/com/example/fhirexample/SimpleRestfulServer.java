@@ -17,6 +17,6 @@ public class SimpleRestfulServer extends RestfulServer{
         //Release 5 is already available so I considered it's worth the try
         setFhirContext(FhirContext.forR5());
 
-        registerProvider(new AllergyIntoleranceResourceProvider());
+        registerProvider(new AllergyIntoleranceResourceProvider2());
     }
 }
