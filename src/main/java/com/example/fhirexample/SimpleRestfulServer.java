@@ -3,6 +3,7 @@ package com.example.fhirexample;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import com.example.fhirexample.resourceprovider.AllergyIntoleranceResourceProvider;
+import com.example.fhirexample.resourceprovider.tryOutClasses.AllergyIntoleranceResourceProvider2;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

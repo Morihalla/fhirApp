@@ -6,12 +6,14 @@ import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceVersionConflictException;
+import lombok.Data;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Data
 public class AllergyIntoleranceResourceProvider implements IResourceProvider {
 
     long nextID = 1;
@@ -73,10 +75,20 @@ public class AllergyIntoleranceResourceProvider implements IResourceProvider {
 
     @Update
     public MethodOutcome updateAllergyIntolerance (@IdParam IdType ID, AllergyIntolerance AI) {
-        String resourceID = ID.getIdPart();
         String versionID = ID.getVersionIdPart();
         String currentVersion = "1";
 
+        if (!versionID.equals(currentVersion)) {
+            throw new ResourceVersionConflictException("Expected version " + currentVersion);
+        }
+
+        return new MethodOutcome();
+    }
+
+    @Delete
+    public MethodOutcome deleteAllergyIntolerance (@IdParam IdType ID, @ConditionalUrlParam String url) {
+        String versionID = ID.getVersionIdPart();
+        String currentVersion = "1";
         if (!versionID.equals(currentVersion)) {
             throw new ResourceVersionConflictException("Expected version " + currentVersion);
         }
