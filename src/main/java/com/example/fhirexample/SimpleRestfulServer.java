@@ -18,5 +18,7 @@ public class SimpleRestfulServer extends RestfulServer{
         setFhirContext(FhirContext.forR5());
 
         registerProvider(new AllergyIntoleranceResourceProvider2());
+
+
     }
 }
