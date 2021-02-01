@@ -1,0 +1,11 @@
+
+R	java:S107"=Method has 38 parameters, which is greater than 7 authorized.(®‘ÚÀ
+k	java:S117C"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ö¿‡¾úÿÿÿÿ
+f	java:S117G"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œ¢–ò
+k	java:S117K"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(úÛ½’úÿÿÿÿ
+f	java:S117W"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(«åã£
+k	java:S117k"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ßƒ…›úÿÿÿÿ
+g	java:S117‡"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(è¾€æ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ì²¬Ïùÿÿÿÿ
+z
+java:S1488Ð"^Immediately return this expression instead of assigning it to the temporary variable "retVal".(ÀÌºªøÿÿÿÿ
